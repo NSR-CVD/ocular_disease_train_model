@@ -1,0 +1,29 @@
+variables:
+  DOCKER_REGISTRY: 515041672543.dkr.ecr.ap-southeast-1.amazonaws.com
+  AWS_DEFAULT_REGION: ap-southeast-1
+  AWS_ECR_NAME: heath-me-server-train-model-ecr
+  DOCKER_HOST: tcp://docker:2375
+
+publish:
+  image:
+    name: amazon/aws-cli
+    entrypoint: [""]
+  services:
+    - docker:dind
+  when: manual
+  only:
+    - dev
+  before_script:
+    - amazon-linux-extras install docker
+    - aws --version
+    - docker --version
+  script:
+    - echo aws login ....
+    - aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${DOCKER_REGISTRY}
+    - echo aws login success
+    - docker build -t ${AWS_ECR_NAME} .
+    - echo docker build success
+    - docker tag ${AWS_ECR_NAME}:latest ${DOCKER_REGISTRY}/${AWS_ECR_NAME}:latest
+    - echo docker tag success
+    - docker push ${DOCKER_REGISTRY}/${AWS_ECR_NAME}:latest
+    - echo docker push success

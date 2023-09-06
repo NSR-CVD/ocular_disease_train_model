@@ -1,0 +1,17 @@
+FROM python:3.9-slim-buster
+
+WORKDIR /flask-docker
+
+RUN pip install --no-cache --upgrade pip setuptools
+
+RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
+
+RUN apt-get install -y tini
+
+ENV TZ=Asia/Bangkok
+
+COPY requirement.txt requirement.txt
+
+RUN pip install -r requirement.txt
+
+COPY . .

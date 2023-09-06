@@ -1,5 +1,5 @@
 ./model_file
 ./__pycache__
 ./training_data_temp
-.config_dev.ini
-.config_prd.ini
+/config_dev.ini
+/config_prd.ini
